@@ -16,10 +16,10 @@ double **computeSimMat(Point *data, int n,int d){
         assert(res[i]);
 
         for(j=0; j<n; ++j){
-            if(i != j){
-                res[i][j] = exp((-0.5)*eucDist(data[i],data[j]));
-            }else{
+            if(i == j){
                 res[i][j] = 0;
+            }else{
+                res[i][j] = exp((-0.5)*eucDist(data[i],data[j]));
             }
         }
     }
