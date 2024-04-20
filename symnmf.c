@@ -90,10 +90,8 @@ double **computeNormSimMat(double **A,double **D, int n){
 /*(H:nxk, W:nxn)*/
 double **UpdateH(double **H, double **W, int n, int k,double beta){
     double **res = (double **)malloc(sizeof(double *)*n);
-
     int i,j;
     assert(res);
-
 
     double **WH = mulMat(W,H, n,n,k);
     double **H_t = transpose(H, n,k);
