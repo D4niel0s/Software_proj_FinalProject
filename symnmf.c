@@ -127,6 +127,27 @@ double **UpdateH(double **H, double **W, int n, double beta){
 }   
 
 
+/*Returns frobenius norm of a real nxn matrix A*/
+double squaredFrobeniusNorm(double **A, int n){
+    double **A_t = transpose(A, n); /*The Hermitian conjucate of A is also the transpose because A is a real matrix*/
+    double **A_tA = mulMat(A_t,A, n);
+    int i;
+    double res = 0;
+
+    for(i=0; i<n; ++i){
+        res += A_tA[i][i];
+    }
+    
+    /*Free auxiliary memory allocation*/
+    for(i=0; i<n; ++i){
+        free(A_t[i]);
+        free(A_tA[i]);
+    }
+    free(A_t);
+    free(A_tA);
+
+    return res;
+}
 
 
 /*Multiplies two nxn matrices, returned value is a new matrix: A*B*/
