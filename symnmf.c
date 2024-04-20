@@ -189,6 +189,24 @@ double **transpose(double **A, int n, int m){
     return res;
 }
 
+/*Returns the differrence between two nxm matrices. (A-B)*/
+double **matDiff(double **A, double **B, int n, int m){
+    double **res = (double **)malloc(sizeof(double *)*n);
+    int i,j;
+    assert(res);
+
+    for(i=0; i<n; ++i){
+        res[i] = (double *)malloc(sizeof(double)*n);
+        assert(res[i]);
+
+        for(j=0; j<m; ++j){
+            res[i][j] = A[i][j] - B[i][j];
+        }
+    }
+
+    return res;
+}
+
 /*Calculates euclidean distance between a and b, assumes matching dimensions*/
 double eucDist(Point a, Point b){
     int i;

@@ -11,6 +11,7 @@ double **UpdateH(double**,double**,int,int,double);
 
 double **mulMat(double**,double**,int,int,int);
 double **transpose(double**,int,int);
+double **matDiff(double**,double**,int,int);
 double eucDist(Point,Point);
 
 /*DEFINITIONS*/
