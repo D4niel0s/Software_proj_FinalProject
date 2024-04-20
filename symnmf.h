@@ -7,7 +7,10 @@
 double **computeSimMat(Point*,int,int);
 double **computeDegMat(double**,int);
 double **computeNormSimMat(double**,double**,int);
+double **UpdateH(double**,double**,int,double);
+
 double **mulMat(double**,double**,int);
+double **transpose(double**,int);
 double eucDist(Point,Point);
 
 /*DEFINITIONS*/
