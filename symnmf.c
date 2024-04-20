@@ -3,10 +3,8 @@
     #include "symnmf.h"
 #endif
 
-/*COMPUTE SIMILARITY MATRIX*/
-
 /*Recieves data which is an array of n d-dimensional points*/
-double **computeSimMat(Point *data, int n,int d){
+double **computeSimMat(Point *data, int n){
     double **res = (double **)malloc(sizeof(double *)*n);
     int i,j;
     assert(res);
@@ -74,8 +72,8 @@ double **computeNormSimMat(double **A,double **D, int n){
         }
     }
 
-    double **C = mulMat(normD,A,n);
-    double **res = mulMat(C,normD,n);
+    double **C = mulMat(normD,A, n,n,n);
+    double **res = mulMat(C,normD, n,n,n);
 
     /*Free auxiliary allocated memory*/
     for(i=0; i<n; ++i){
@@ -89,32 +87,34 @@ double **computeNormSimMat(double **A,double **D, int n){
 }
 
 
-
-double **UpdateH(double **H, double **W, int n, double beta){
+/*(H:nxk, W:nxn)*/
+double **UpdateH(double **H, double **W, int n, int k,double beta){
     double **res = (double **)malloc(sizeof(double *)*n);
 
     int i,j;
     assert(res);
 
 
-    double **WH = mulMat(W,H, n);
-    double **H_t = transpose(H, n);
-    double **HH_t = mulMat(H,H_t, n);
-    double **HH_tH = mulmat(HH_t,H, n);
+    double **WH = mulMat(W,H, n,n,k);
+    double **H_t = transpose(H, n,k);
+    double **HH_t = mulMat(H,H_t, n,k,n);
+    double **HH_tH = mulmat(HH_t,H, n,n,k);
 
     for(i=0; i<n; ++i){
-        res[i] = (double *)malloc(sizeof(double)*n);
+        res[i] = (double *)malloc(sizeof(double)*k);
         assert(res[i]);
 
-        for(j=0; j<n; ++j){
+        for(j=0; j<k; ++j){
             res[i][j] = H[i][j] * ((1-beta)+beta*(WH[i][j]/HH_tH[i][j]));
         }
 
     }
-    /*Free all auxiliary memory allocations*/
+    /*Free all auxiliary memory allocation*/
     for(i=0; i<n; ++i){
+        if(i<k){
+            free(H_t[i]);
+        }
         free(WH[i]);
-        free(H_t[i]);
         free(HH_t[i]);
         free(HH_tH[i]);
     }
@@ -126,20 +126,19 @@ double **UpdateH(double **H, double **W, int n, double beta){
     return res;
 }   
 
-
-/*Returns frobenius norm of a real nxn matrix A*/
-double squaredFrobeniusNorm(double **A, int n){
-    double **A_t = transpose(A, n); /*The Hermitian conjucate of A is also the transpose because A is a real matrix*/
-    double **A_tA = mulMat(A_t,A, n);
+/*Returns frobenius norm of a real nxm matrix A*/
+double squaredFrobeniusNorm(double **A, int n, int m){
+    double **A_t = transpose(A, n,m); /*The Hermitian conjucate of A is also the transpose because A is a real matrix*/
+    double **A_tA = mulMat(A_t,A, m,n,m);
     int i;
     double res = 0;
 
-    for(i=0; i<n; ++i){
+    for(i=0; i<m; ++i){
         res += A_tA[i][i];
     }
     
     /*Free auxiliary memory allocation*/
-    for(i=0; i<n; ++i){
+    for(i=0; i<m; ++i){
         free(A_t[i]);
         free(A_tA[i]);
     }
@@ -149,21 +148,20 @@ double squaredFrobeniusNorm(double **A, int n){
     return res;
 }
 
-
-/*Multiplies two nxn matrices, returned value is a new matrix: A*B*/
-double **mulMat(double **A,double **B, int n){
+/*Multiplies two  matrices(A:nxm, B:mxl), returned value is a new matrix: A*B*/
+double **mulMat(double **A,double **B, int n,int m, int l){
     double **res = (double **)malloc(sizeof(double *)*n);
     int sum;
     int i,j,k;
     assert(res);
 
     for(i=0; i<n; ++i){ /*Iterate rows of A*/
-        res[i] = (double *)malloc(sizeof(double)*n);
+        res[i] = (double *)malloc(sizeof(double)*l);
         assert(res[i]);
 
-        for(j=0; j<n; ++j){ /*Iterate columns of B*/
+        for(j=0; j<l; ++j){ /*Iterate columns of B*/
             sum = 0;
-            for(k=0; k<n; ++k){ /*multiply elements*/
+            for(k=0; k<m; ++k){ /*multiply elements*/
                 sum += A[i][k] * B[k][j];
             }
 
@@ -174,13 +172,13 @@ double **mulMat(double **A,double **B, int n){
     return res;
 }
 
-/*Returns the transpose of a given matrix*/
-double **transpose(double **A, int n){
-    double **res = (double **)malloc(sizeof(double *)*n);
+/*Returns the transpose of a given nxm matrix*/
+double **transpose(double **A, int n, int m){
+    double **res = (double **)malloc(sizeof(double *)*m);
     int i,j;
     assert(res);
 
-    for(i=0;; i<n; ++i){
+    for(i=0; i<m; ++i){
         res[i] = (double *)malloc(sizeof(double)*n);
         assert(res[i]);
 

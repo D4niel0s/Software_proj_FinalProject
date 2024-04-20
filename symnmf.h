@@ -4,13 +4,13 @@
 //#include <assert.h>
 
 /*PROTOTYPES*/
-double **computeSimMat(Point*,int,int);
+double **computeSimMat(Point*,int);
 double **computeDegMat(double**,int);
 double **computeNormSimMat(double**,double**,int);
-double **UpdateH(double**,double**,int,double);
+double **UpdateH(double**,double**,int,int,double);
 
-double **mulMat(double**,double**,int);
-double **transpose(double**,int);
+double **mulMat(double**,double**,int,int,int);
+double **transpose(double**,int,int);
 double eucDist(Point,Point);
 
 /*DEFINITIONS*/
