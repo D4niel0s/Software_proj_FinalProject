@@ -9,6 +9,7 @@ double **computeDegMat(double**,int);
 double **computeNormSimMat(double**,double**,int);
 double **UpdateH(double**,double**,int,int,double);
 
+double squaredFrobeniusNorm(double**,int,int);
 double **mulMat(double**,double**,int,int,int);
 double **transpose(double**,int,int);
 double **matDiff(double**,double**,int,int);
