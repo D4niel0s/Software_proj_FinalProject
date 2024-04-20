@@ -90,6 +90,43 @@ double **computeNormSimMat(double **A,double **D, int n){
 
 
 
+double **UpdateH(double **H, double **W, int n, double beta){
+    double **res = (double **)malloc(sizeof(double *)*n);
+
+    int i,j;
+    assert(res);
+
+
+    double **WH = mulMat(W,H, n);
+    double **H_t = transpose(H, n);
+    double **HH_t = mulMat(H,H_t, n);
+    double **HH_tH = mulmat(HH_t,H, n);
+
+    for(i=0; i<n; ++i){
+        res[i] = (double *)malloc(sizeof(double)*n);
+        assert(res[i]);
+
+        for(j=0; j<n; ++j){
+            res[i][j] = H[i][j] * ((1-beta)+beta*(WH[i][j]/HH_tH[i][j]));
+        }
+
+    }
+    /*Free all auxiliary memory allocations*/
+    for(i=0; i<n; ++i){
+        free(WH[i]);
+        free(H_t[i]);
+        free(HH_t[i]);
+        free(HH_tH[i]);
+    }
+    free(WH);
+    free(H_t);
+    free(HH_t);
+    free(HH_tH);
+
+    return res;
+}   
+
+
 
 
 /*Multiplies two nxn matrices, returned value is a new matrix: A*B*/
@@ -116,6 +153,22 @@ double **mulMat(double **A,double **B, int n){
     return res;
 }
 
+/*Returns the transpose of a given matrix*/
+double **transpose(double **A, int n){
+    double **res = (double **)malloc(sizeof(double *)*n);
+    int i,j;
+    assert(res);
+
+    for(i=0;; i<n; ++i){
+        res[i] = (double *)malloc(sizeof(double)*n);
+        assert(res[i]);
+
+        for(j=0; j<n; ++j){
+            res[i][j] = A[j][i];
+        }
+    }
+    return res;
+}
 
 /*Calculates euclidean distance between a and b, assumes matching dimensions*/
 double eucDist(Point a, Point b){
