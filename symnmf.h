@@ -7,6 +7,7 @@
 double **computeSimMat(Point*,int);
 double **computeDegMat(double**,int);
 double **computeNormSimMat(double**,double**,int);
+double **Hoptimization(double**,double**,int,int,int,double);
 double **UpdateH(double**,double**,int,int,double);
 
 double squaredFrobeniusNorm(double**,int,int);

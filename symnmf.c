@@ -86,6 +86,35 @@ double **computeNormSimMat(double **A,double **D, int n){
     return res;
 }
 
+/*H is initialized randomly as said in the assignment, W is the laplacian (W:nxn, Hnxk)*/
+double **Hoptimization(double **H, double **W,int n, int k, int max_iter, double eps){
+    double **prevH,**curH,**diff;
+    int iter,i;
+    double diffNorm;
+
+    prevH = H;
+
+    while(iter<max_iter && diffNorm>=eps){
+        curH = UpdateH(prevH,W, n,k,0.5);
+        diff = matDiff(curH,prevH, n,k);
+
+        diffNorm = squaredFrobeniusNorm(diff, n,k);
+
+        /*Free previos H and the differrence matrix (they become unused)*/
+        for(i=0; i<n; ++i){
+            free(prevH[i]);
+            free(diff[i]);
+        }
+        free(prevH);
+        free(diff);
+
+        iter++;
+        prevH = curH;
+    }
+
+    return curH;
+}
+
 
 /*(H:nxk, W:nxn)*/
 double **UpdateH(double **H, double **W, int n, int k,double beta){
