@@ -37,17 +37,14 @@ double **computeDegMat(double **simMat, int n){
         assert(res[i]);
         sum = 0;
 
-        for(j=0; j<n; ++j){ /*Compute d[i]*/
+        for(j=0; j<n; ++j){ /*Compute d[i] and assign zeroes*/
             sum += simMat[i][j];
-        }
 
-        for(j=0; j<n; ++j){
-            if(i == j){
-                res[i][j] = sum;
-            }else{
+            if(i != j){
                 res[i][j] = 0;
             }
         }
+        res[i][i] = sum;
     }
 
     return res;
@@ -56,6 +53,7 @@ double **computeDegMat(double **simMat, int n){
 /*A is the similarity matrix, and D is the diagonal degree matrix*/
 double **computeNormSimMat(double **A,double **D, int n){
     double **normD = (double **)malloc(sizeof(double *)*n);
+    double **C, **res;
     int i,j;
     assert(normD);
 
@@ -64,7 +62,7 @@ double **computeNormSimMat(double **A,double **D, int n){
         assert(normD[i]);
 
         for(j=0; j<n; ++j){
-            if(i == j){
+            if(D[i][j] != 0){
                 normD[i][j] = 1.0/(sqrt(D[i][j]));
             }else{
                 normD[i][j] = 0;
@@ -72,8 +70,8 @@ double **computeNormSimMat(double **A,double **D, int n){
         }
     }
 
-    double **C = mulMat(normD,A, n,n,n);
-    double **res = mulMat(C,normD, n,n,n);
+    C = mulMat(normD,A, n,n,n);
+    res = mulMat(C,normD, n,n,n);
 
     /*Free auxiliary allocated memory*/
     for(i=0; i<n; ++i){
@@ -108,8 +106,8 @@ double **Hoptimization(double **H, double **W,int n, int k, int max_iter, double
         free(prevH);
         free(diff);
 
-        iter++;
         prevH = curH;
+        iter++;
     }
 
     return curH;
