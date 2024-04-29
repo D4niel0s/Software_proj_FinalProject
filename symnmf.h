@@ -1,9 +1,21 @@
+#ifndef SYMNMF_H
+#define SYMNMF_H
+
 /*INCLUDES*/
-//#include <stdlib.h>
-//#include <math.h>
-//#include <assert.h>
+#include <stdlib.h>
+#include <math.h>
+#include <assert.h>
+
+/*DEFINITIONS*/
+
+/*A struct representing a point*/
+typedef struct P{
+    double *coords;
+    int dim;
+}Point;
 
 /*PROTOTYPES*/
+
 double **computeSimMat(Point*,int);
 double **computeDegMat(double**,int);
 double **computeNormSimMat(double**,double**,int);
@@ -16,8 +28,5 @@ double **transpose(double**,int,int);
 double **matDiff(double**,double**,int,int);
 double eucDist(Point,Point);
 
-/*DEFINITIONS*/
-typedef struct P{
-    double *coords;
-    int dim;
-}Point;
+
+#endif /*SYMNMF_H*/

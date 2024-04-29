@@ -1,9 +1,6 @@
-#ifndef SYMNMF_H
-    #define SYMNMF_H
-    #include "symnmf.h"
-#endif
+#include "symnmf.h"
 
-/*Recieves data which is an array of n d-dimensional points*/
+/*Recieves data which is an array of n points*/
 double **computeSimMat(Point *data, int n){
     double **res = (double **)malloc(sizeof(double *)*n);
     int i,j;
@@ -113,8 +110,7 @@ double **Hoptimization(double **H, double **W,int n, int k, int max_iter, double
     return curH;
 }
 
-
-/*(H:nxk, W:nxn)*/
+/*Updates H matrix according to step 1.4.2 in the assignment (H:nxk, W:nxn)*/
 double **UpdateH(double **H, double **W, int n, int k,double beta){
     double **res = (double **)malloc(sizeof(double *)*n);
     int i,j;
@@ -123,7 +119,7 @@ double **UpdateH(double **H, double **W, int n, int k,double beta){
     double **WH = mulMat(W,H, n,n,k);
     double **H_t = transpose(H, n,k);
     double **HH_t = mulMat(H,H_t, n,k,n);
-    double **HH_tH = mulmat(HH_t,H, n,n,k);
+    double **HH_tH = mulMat(HH_t,H, n,n,k);
 
     for(i=0; i<n; ++i){
         res[i] = (double *)malloc(sizeof(double)*k);
@@ -150,6 +146,8 @@ double **UpdateH(double **H, double **W, int n, int k,double beta){
 
     return res;
 }   
+
+
 
 /*Returns frobenius norm of a real nxm matrix A*/
 double squaredFrobeniusNorm(double **A, int n, int m){
@@ -185,12 +183,10 @@ double **mulMat(double **A,double **B, int n,int m, int l){
         assert(res[i]);
 
         for(j=0; j<l; ++j){ /*Iterate columns of B*/
-            sum = 0;
+            res[i][j] = 0;
             for(k=0; k<m; ++k){ /*multiply elements*/
-                sum += A[i][k] * B[k][j];
+                res[i][j] += A[i][k] * B[k][j];
             }
-
-            res[i][j] = sum;
         }
     }
 
