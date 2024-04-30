@@ -114,12 +114,12 @@ double **Hoptimization(double **H, double **W,int n, int k, int max_iter, double
 double **UpdateH(double **H, double **W, int n, int k,double beta){
     double **res = (double **)malloc(sizeof(double *)*n);
     int i,j;
-    assert(res);
 
     double **WH = mulMat(W,H, n,n,k);
     double **H_t = transpose(H, n,k);
     double **HH_t = mulMat(H,H_t, n,k,n);
     double **HH_tH = mulMat(HH_t,H, n,n,k);
+    assert(res);
 
     for(i=0; i<n; ++i){
         res[i] = (double *)malloc(sizeof(double)*k);
@@ -149,7 +149,7 @@ double **UpdateH(double **H, double **W, int n, int k,double beta){
 
 
 
-/*Returns frobenius norm of a real nxm matrix A*/
+/*Returns squared frobenius norm of a real nxm matrix A*/
 double squaredFrobeniusNorm(double **A, int n, int m){
     double **A_t = transpose(A, n,m); /*The Hermitian conjucate of A is also the transpose because A is a real matrix*/
     double **A_tA = mulMat(A_t,A, m,n,m);
@@ -171,7 +171,10 @@ double squaredFrobeniusNorm(double **A, int n, int m){
     return res;
 }
 
-/*Multiplies two  matrices(A:nxm, B:mxl), returned value is a new matrix: A*B*/
+/**
+ * Multiplies two  matrices(A:nxm, B:mxl), return value is A*B
+ * Allocates a new matrix that should be free by the caller (free each row+the outer pointer)
+ */
 double **mulMat(double **A,double **B, int n,int m, int l){
     double **res = (double **)malloc(sizeof(double *)*n);
     int sum;
@@ -193,7 +196,10 @@ double **mulMat(double **A,double **B, int n,int m, int l){
     return res;
 }
 
-/*Returns the transpose of a given nxm matrix*/
+/**
+ * Returns the transpose of a given nxm matrix.
+ * Allocates a new matrix that should be free by the caller (free each row+the outer pointer)
+ */
 double **transpose(double **A, int n, int m){
     double **res = (double **)malloc(sizeof(double *)*m);
     int i,j;
@@ -210,7 +216,10 @@ double **transpose(double **A, int n, int m){
     return res;
 }
 
-/*Returns the differrence between two nxm matrices. (A-B)*/
+/**
+ * Returns the differrence between two nxm matrices. return value is A-B
+ * Allocates a new matrix that should be free by the caller (free each row+the outer pointer)
+ */
 double **matDiff(double **A, double **B, int n, int m){
     double **res = (double **)malloc(sizeof(double *)*n);
     int i,j;
