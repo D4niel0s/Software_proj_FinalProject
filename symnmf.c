@@ -151,24 +151,17 @@ double **UpdateH(double **H, double **W, int n, int k,double beta){
 
 
 /*Returns squared frobenius norm of a real nxm matrix A*/
+/*Squared frobenius norm is given by trace(A^t*A) = sum of squares of all entries of A*/
 double squaredFrobeniusNorm(double **A, int n, int m){
-    double **A_t = transpose(A, n,m); /*The Hermitian conjucate of A is also the transpose because A is a real matrix*/
-    double **A_tA = mulMat(A_t,A, m,n,m);
-    int i;
+    int i,j;
     double res = 0;
 
-    for(i=0; i<m; ++i){
-        res += A_tA[i][i];
+    for(i=0; i<n; ++i){
+        for(j=0;j<m;++j){
+            res += A[i][j];
+        }
     }
     
-    /*Free auxiliary memory allocation*/
-    for(i=0; i<m; ++i){
-        free(A_t[i]);
-        free(A_tA[i]);
-    }
-    free(A_t);
-    free(A_tA);
-
     return res;
 }
 
