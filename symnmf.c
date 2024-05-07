@@ -1,3 +1,6 @@
+#ifndef SYMNMF_C /*Inclusion guard*/
+#define FYMNMF_C
+
 #include "symnmf.h"
 
 /*Recieves data which is an array of n points*/
@@ -241,3 +244,5 @@ double eucDist(Point a, Point b){
 
     return res;
 }
+
+#endif /*SYMNMF_C*/
