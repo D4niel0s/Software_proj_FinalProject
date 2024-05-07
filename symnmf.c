@@ -158,7 +158,7 @@ double squaredFrobeniusNorm(double **A, int n, int m){
 
     for(i=0; i<n; ++i){
         for(j=0;j<m;++j){
-            res += A[i][j];
+            res += pow(A[i][j],2);
         }
     }
     
