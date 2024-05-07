@@ -87,6 +87,7 @@ double **Hoptimization(double **H, double **W,int n, int k, int max_iter, double
     int iter,i;
     double diffNorm;
 
+    iter = 0;
     prevH = H;
 
     while(iter<max_iter && diffNorm>=eps){
