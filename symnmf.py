@@ -1,6 +1,10 @@
 import math, sys, numpy as np
 np.random.seed(0)
 
+class Point:
+    def __init__(self, c:list[float], d:int):
+        self.coords = c
+        self.dim = d
 
 
 def main():
