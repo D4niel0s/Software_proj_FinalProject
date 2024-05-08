@@ -8,7 +8,7 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
     
     /*Local Vars*/
     Point *data;
-    int i,,j,n,d;
+    int i,j,n,d;
     double **res;
     PyObject *OBJ;
     PyObject *arr;
