@@ -41,7 +41,7 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
         }
     }
 
-    res = compSimMat(data, n);
+    res = computeSimMat(data, n);
 
     OUT = PyList_New(n);
     for(i=0; i<n; ++i){
