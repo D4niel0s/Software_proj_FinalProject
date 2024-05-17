@@ -8,7 +8,7 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
     
     /*Local Vars*/
     Point *data;
-    int i,j,n,d;
+    long i,j,n,d;
     double **res;
     PyObject *OBJ;
     PyObject *arr;
@@ -16,17 +16,18 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
     /*Output*/
     PyObject *OUT;
 
-    if(!PyArg_parseTuple(args, "Oi", &GivenData, &n)){
+    if(!PyArg_parseTuple(args, "O", &GivenData)){
         return NULL;
     }
 
+    n = PyList_Size(GivenData);
     data = (Point *)malloc(sizeof(Point)*n);
     assert(data);
 
     /*Get dimension of 1st point (assume all point have the same dimension)*/
     OBJ = PyList_GetItem(GivenData, 0);
     arr = PyObject_GetAttrString(OBJ, "dim");
-    d = PyInt_AsInt(arr);
+    d = PyLong_AsLong(arr);
 
     for(i=0; i<n; ++i){
         OBJ = PyList_GetItem(GivenData, i);
