@@ -1,10 +1,11 @@
-import math, sys, numpy as np
+import math, sys, numpy as np, pandas as pd
 np.random.seed(0)
 
 class Point:
-    def __init__(self, c:list[float], d:int):
+    def __init__(self, c:list[float], d:int, clust: int):
         self.coords = c
         self.dim = d
+        self.cluster = clust
 
 
 def main():
@@ -13,13 +14,12 @@ def main():
         print("ERR")
         exit(0)
     
-    k = float(sys.argv[1])
+    k = int(sys.argv[1])
     goal = str(sys.argv[2])
     fileName = str(sys.argv[3])
 
+    N, d, data = parseFile(fileName)
     
-
-
 
 def initH(W, n,k):
     avg = 0
@@ -37,6 +37,24 @@ def initH(W, n,k):
 
     return H
 
+# Parses a csv file and returns N: number of observations, d: dimension, data: Point array of data
+def parseFile(filename: str) -> tuple[int,int,list[Point]]:
+    df = pd.read_csv(filename, header=None)
+
+    N,d = df.shape
+
+    # Convert pandas df to python matrix
+    df = list(df.to_numpy())
+    for i in df:
+        i = list(i)
+
+    # Initialize Point array
+    data = [Point([0]*d,d,-1)]*N
+    for i in range(len(df)):
+        data[i] = Point(list(map(float,df[i])), d, -1)
+
+    
+    return tuple([N,d,data])
 
 if __name__ == '__main__':
     main()
