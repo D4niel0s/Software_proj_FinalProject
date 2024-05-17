@@ -21,8 +21,8 @@ def main():
     N, d, data = parseFile(fileName)
     
 
-def initH(W, n,k):
-    avg = 0
+def initH(W:list[list[float]], n:int, k:int) -> list[list[float]]:
+    avg:float = 0
     for i in range(n):
         for j in range(n):
             avg += W[i][j]
@@ -40,7 +40,6 @@ def initH(W, n,k):
 # Parses a csv file and returns N: number of observations, d: dimension, data: Point array of data
 def parseFile(filename: str) -> tuple[int,int,list[Point]]:
     df = pd.read_csv(filename, header=None)
-
     N,d = df.shape
 
     # Convert pandas df to python matrix
