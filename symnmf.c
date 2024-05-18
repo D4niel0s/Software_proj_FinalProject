@@ -8,7 +8,6 @@ double **computeSimMat(Point *data, int n){
     double **res = (double **)malloc(sizeof(double *)*n);
     int i,j;
     assert(res);
-
     for(i=0; i<n; ++i){
         res[i] = (double *)malloc(sizeof(double)*n);
         assert(res[i]);
@@ -174,7 +173,6 @@ double squaredFrobeniusNorm(double **A, int n, int m){
  */
 double **mulMat(double **A,double **B, int n,int m, int l){
     double **res = (double **)malloc(sizeof(double *)*n);
-    int sum;
     int i,j,k;
     assert(res);
 

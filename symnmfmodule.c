@@ -1,9 +1,10 @@
 #define PY_SSIZE_T_CLEAN
-#include <Python.h>
+/*#include <Python.h>*/
+#include "C:\Users\Danik\AppData\Local\Programs\Python\Python311\include\Python.h"
 
 #include "symnmf.c"
 
-static PyObject* compSimMat(PyObject *self, PyOjbect *args){
+static PyObject *compSimMat(PyObject *self, PyObject *args){
     PyObject *GivenData; /*Input*/
     
     /*Local Vars*/
@@ -16,11 +17,10 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
     /*Output*/
     PyObject *OUT;
 
-    if(!PyArg_parseTuple(args, "O", &GivenData)){
+    if(!PyArg_ParseTuple(args, "Oi", &GivenData, &n)){
         return NULL;
     }
-
-    n = PyList_Size(GivenData);
+    
     data = (Point *)malloc(sizeof(Point)*n);
     assert(data);
 
@@ -34,7 +34,7 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
         arr = PyObject_GetAttrString(OBJ, "coords");
 
         data[i].coords = (double *)malloc(sizeof(double)*d);
-        assert(data[i]);
+        assert(data[i].coords);
 
         for(j=0; j<d; ++j){
             OBJ = PyList_GetItem(arr, j); /*OBJ is data[i].coords[j] from python*/
@@ -43,7 +43,7 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
     }
 
     res = computeSimMat(data, n);
-
+    
     OUT = PyList_New(n);
     for(i=0; i<n; ++i){
         arr = PyList_New(n);
@@ -63,4 +63,29 @@ static PyObject* compSimMat(PyObject *self, PyOjbect *args){
     free(res);
 
     return OUT;
+}
+
+static PyMethodDef symMeths[] = {
+    {"sym",
+        (PyCFunction)compSimMat,
+        METH_VARARGS,
+        PyDoc_STR("")},
+    {NULL,NULL,0,NULL}
+};
+
+static struct PyModuleDef symnmfmodule = {
+    PyModuleDef_HEAD_INIT,
+    "symnmfmodule",
+    NULL,
+    -1,
+    symMeths
+};
+
+PyMODINIT_FUNC PyInit_symnmfmodule(void){
+    PyObject *m;
+    m = PyModule_Create(&symnmfmodule);
+    if(!m){
+        return NULL;
+    }
+    return m;
 }

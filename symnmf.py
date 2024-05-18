@@ -1,4 +1,6 @@
 import math, sys, numpy as np, pandas as pd
+import symnmfmodule as sm
+
 np.random.seed(0)
 
 class Point:
@@ -13,13 +15,16 @@ def main():
     if(argc != 4):
         print("ERR")
         exit(0)
-    
+
     k = int(sys.argv[1])
     goal = str(sys.argv[2])
     fileName = str(sys.argv[3])
 
     N, d, data = parseFile(fileName)
     
+    MAT = sm.sym(data,N)
+    for i in MAT:
+        print(i)
 
 def initH(W:list[list[float]], n:int, k:int) -> list[list[float]]:
     avg:float = 0
@@ -55,5 +60,7 @@ def parseFile(filename: str) -> tuple[int,int,list[Point]]:
     
     return tuple([N,d,data])
 
+
+        
 if __name__ == '__main__':
     main()
