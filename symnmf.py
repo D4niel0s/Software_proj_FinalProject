@@ -21,19 +21,17 @@ def main():
     fileName = str(sys.argv[3])
 
     N, d, data = parseFile(fileName)
-    
+    sim = sm.sym(data)
+    ddg = sm.ddg(data)
     W = sm.norm(data)
     Hinitial = initH(W, N, k)
 
     OPT = sm.symnmf(Hinitial, W)
-    
     sums = [0]*k
     for i in range(N):
         data[i].cluster = np.array(OPT[i]).argmax()
         sums[data[i].cluster] += 1
     print(sums)
-    for i in data:
-        print("cluster:", i.cluster)
 
 
 
