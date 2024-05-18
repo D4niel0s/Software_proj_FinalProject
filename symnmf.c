@@ -87,7 +87,7 @@ double **computeNormSimMat(double **A,double **D, int n){
 double **Hoptimization(double **H, double **W,int n, int k, int max_iter, double eps){
     double **prevH,**curH,**diff;
     int iter,i;
-    double diffNorm;
+    double diffNorm = INT_MAX;
 
     iter = 0;
     prevH = H;
