@@ -1,4 +1,4 @@
-import math, sys, numpy as np, pandas as pd
+import math, sys, numpy as np, pandas as pd,time
 import symnmfmodule as sm
 
 np.random.seed(0)
@@ -22,9 +22,12 @@ def main():
 
     N, d, data = parseFile(fileName)
     
-    MAT = sm.sym(data,N)
-    for i in MAT:
-        print(i)
+    W = sm.norm(data)
+    Hinitial = initH(W, N, k)
+
+    OPT = sm.symnmf(Hinitial, W)
+
+
 
 def initH(W:list[list[float]], n:int, k:int) -> list[list[float]]:
     avg:float = 0
@@ -34,12 +37,12 @@ def initH(W:list[list[float]], n:int, k:int) -> list[list[float]]:
     avg /= math.pow(n,2) #The average of all entries of W
 
     bound = 2.0*math.sqrt(avg/float(k))
-    H = [(0 for j in range(n)) for i in range(n)]
+    H = [[0]*k]*n
     
     for i in range(n):
-        for j in range(n):
+        for j in range(k):
             H[i][j] = np.random.uniform(0, bound)
-
+    
     return H
 
 # Parses a csv file and returns N: number of observations, d: dimension, data: Point array of data
