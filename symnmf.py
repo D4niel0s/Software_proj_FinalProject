@@ -26,6 +26,14 @@ def main():
     Hinitial = initH(W, N, k)
 
     OPT = sm.symnmf(Hinitial, W)
+    
+    sums = [0]*k
+    for i in range(N):
+        data[i].cluster = np.array(OPT[i]).argmax()
+        sums[data[i].cluster] += 1
+    print(sums)
+    for i in data:
+        print("cluster:", i.cluster)
 
 
 
@@ -37,7 +45,14 @@ def initH(W:list[list[float]], n:int, k:int) -> list[list[float]]:
     avg /= math.pow(n,2) #The average of all entries of W
 
     bound = 2.0*math.sqrt(avg/float(k))
-    H = [[0]*k]*n
+
+    # Initialize a zero nxk matrix
+    H = []
+    for i in range(n):
+        row = []
+        for j in range(k):
+            row.append(0)
+        H.append(row)
     
     for i in range(n):
         for j in range(k):
