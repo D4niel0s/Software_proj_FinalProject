@@ -1,5 +1,5 @@
 #ifndef SYMNMF_C /*Inclusion guard*/
-#define FYMNMF_C
+#define SYMNMF_C
 
 #include "symnmf.h"
 
@@ -86,11 +86,20 @@ double **computeNormSimMat(double **A,double **D, int n){
 /*H is initialized randomly as said in the assignment, W is the laplacian (W:nxn, Hnxk)*/
 double **Hoptimization(double **H, double **W,int n, int k, int max_iter, double eps){
     double **prevH,**curH,**diff;
-    int iter,i;
+    int iter,i,j;
     double diffNorm = INT_MAX;
 
     iter = 0;
-    prevH = H;
+    prevH = (double **)malloc(sizeof(double *)*n);
+    assert(prevH);
+    for(i=0;i<n;++i){
+        prevH[i] = (double *)malloc(sizeof(double)*k);
+        assert(prevH[i]);
+
+        for(j=0;j<k;++j){
+            prevH[i][j] = H[i][j];
+        }
+    }
 
     while(iter<max_iter && diffNorm>=eps){
         curH = UpdateH(prevH,W, n,k,0.5);
@@ -176,12 +185,16 @@ double **mulMat(double **A,double **B, int n,int m, int l){
     int i,j,k;
     assert(res);
 
-    for(i=0; i<n; ++i){ /*Iterate rows of A*/
+    for(i=0;i<n;++i){
         res[i] = (double *)malloc(sizeof(double)*l);
         assert(res[i]);
-
-        for(j=0; j<l; ++j){ /*Iterate columns of B*/
+        for(j=0;j<l;++j){
             res[i][j] = 0;
+        }
+    }
+
+    for(i=0; i<n; ++i){ /*Iterate rows of A*/
+        for(j=0; j<l; ++j){ /*Iterate columns of B*/
             for(k=0; k<m; ++k){ /*multiply elements*/
                 res[i][j] += A[i][k] * B[k][j];
             }
@@ -221,7 +234,7 @@ double **matDiff(double **A, double **B, int n, int m){
     assert(res);
 
     for(i=0; i<n; ++i){
-        res[i] = (double *)malloc(sizeof(double)*n);
+        res[i] = (double *)malloc(sizeof(double)*m);
         assert(res[i]);
 
         for(j=0; j<m; ++j){
