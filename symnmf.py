@@ -16,22 +16,38 @@ def main():
         print("ERR")
         exit(0)
 
-    k = int(sys.argv[1])
-    goal = str(sys.argv[2])
-    fileName = str(sys.argv[3])
+    try:
+        k = int(sys.argv[1])
+        goal = str(sys.argv[2])
+        fileName = str(sys.argv[3])
+    except:
+        print("Error with arguments")
+        exit(0)
 
-    N, d, data = parseFile(fileName)
-    sim = sm.sym(data)
-    ddg = sm.ddg(data)
-    W = sm.norm(data)
-    Hinitial = initH(W, N, k)
+    N,d, data = parseFile(fileName)
 
-    OPT = sm.symnmf(Hinitial, W)
-    sums = [0]*k
-    for i in range(N):
-        data[i].cluster = np.array(OPT[i]).argmax()
-        sums[data[i].cluster] += 1
-    print(sums)
+    if(goal == "sym"):
+        output = sm.sym(data)
+    elif(goal == "ddg"):
+        output = sm.ddg(data)
+    elif(goal == "norm"):
+        output = sm.norm(data)
+    elif(goal == "symnmf"):
+        W = sm.norm(data)
+        Hinit = initH(W, N,k)
+
+        output = sm.symnmf(Hinit,W)
+    else:
+        print("ERR")
+        exit(0)
+    
+    for i in range(len(output)):
+        for j in range(len(output[0])):
+            print("%.4f" % (output[i][j]) ,end='')
+            if(j != len(output[0])-1):
+                print(',',end='')
+        print()
+
 
 
 
