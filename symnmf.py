@@ -21,7 +21,7 @@ def main():
         goal = str(sys.argv[2])
         fileName = str(sys.argv[3])
     except:
-        print("Error with arguments")
+        print("ERR")
         exit(0)
 
     N,d, data = parseFile(fileName)
@@ -41,12 +41,7 @@ def main():
         print("ERR")
         exit(0)
     
-    for i in range(len(output)):
-        for j in range(len(output[0])):
-            print("%.4f" % (output[i][j]) ,end='')
-            if(j != len(output[0])-1):
-                print(',',end='')
-        print()
+    printMat(output)
 
 
 
@@ -92,6 +87,16 @@ def parseFile(filename: str) -> tuple[int,int,list[Point]]:
     
     return tuple([N,d,data])
 
+def printMat(mat :list[list[any]]):
+    n = len(mat)
+    m = len(mat[0])
+
+    for i in range(n):
+        for j in range(m):
+            print("%.4f" % (mat[i][j]) ,end='')
+            if(j != m-1):
+                print(',',end='')
+        print()
 
         
 if __name__ == '__main__':
