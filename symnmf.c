@@ -3,6 +3,132 @@
 
 #include "symnmf.h"
 
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_LINE_LEN 500
+
+int main(int argc, char **argv){
+    char *fName, *goal, buf[MAX_LINE_LEN];
+    Point *data;
+    FILE *fp;
+    int N=0 ,d, i,j;
+    double **SIM,**DDG, **W, **OUT;
+    int Dflag=0, Wflag=0;
+
+    if(argc != 3){
+        fprintf(stderr, "An error has occurred\n");
+        exit(0);
+    }
+
+    goal = (char *)malloc(sizeof(char)*strlen(argv[1]));
+    fName = (char *)malloc(sizeof(char)*strlen(argv[2]));
+    assert(goal);
+    assert(fName);
+
+    strcpy(goal, argv[1]);
+    strcpy(fName, argv[2]);
+
+    if(strcmp(goal, "sym") != 0 && strcmp(goal, "ddg") != 0 &&strcmp(goal, "norm") != 0){
+        fprintf(stderr, "An error has occurred\n");
+        exit(0);
+    }
+    
+    fp = fopen(fName, "r");
+
+    /* Get N,d from file */
+    while(fgets(buf, MAX_LINE_LEN, fp) != NULL){
+        d = countCommas(buf) + 1;
+        N++;
+    }
+    rewind(fp);
+    
+    /* Assign values to data */
+    data = (Point *)malloc(sizeof(Point) * N);
+    assert(data);
+
+    for(i=0; i<N; ++i){
+        fgets(buf, MAX_LINE_LEN, fp);
+        
+        data[i].coords = (double *)malloc(sizeof(double) *d);
+        data[i].dim = d;
+        assert(data[i].coords);
+        for(j=0; j<d; ++j){
+            sscanf(buf, "%lf,", &(data[i].coords[j]));
+            strcpy(buf, skipUntilComma(buf));
+        }
+    }
+
+    /* Perform calculation depending on input */
+    SIM = computeSimMat(data, N);
+    OUT = SIM;
+    if(strcmp(goal, "ddg") == 0 || strcmp(goal, "norm") == 0){
+        DDG = computeDegMat(SIM, N);
+        Dflag = 1;
+        OUT = DDG;
+    }
+    if(strcmp(goal, "norm") == 0){
+        W = computeNormSimMat(SIM, DDG, N);
+        Wflag = 1;
+        OUT = W;
+    }
+
+    /* Print output */
+    for(i=0;i<N;++i){
+        for(j=0;j<N;++j){
+            printf("%.4f",OUT[i][j]);
+            if(j != N-1){
+                printf(",");
+            }
+        }
+        printf("\n");
+    }
+
+    /* Free all allocations */
+    for(i=0;i<N;++i){
+        if(Dflag){
+            free(DDG[i]);
+        }
+        if(Wflag){
+            free(W[i]);
+        }
+        free(data[i].coords);
+    }
+    if(Dflag){
+        free(DDG);
+    }
+    if(Wflag){
+        free(W);
+    }
+    free(goal);
+    free(fName);
+    free(data);
+
+    return 1;
+}
+
+
+int countCommas(char *str){
+    int i;
+    char *s;
+    for(s=str, i=0; s[i];){
+        if(s[i] == ','){
+            i++;
+        }else{
+            s++;
+        }
+    }
+
+    return i;
+}
+
+char *skipUntilComma(char s[]){
+    while(*s != ','){s++;}
+    return ++s;
+}
+
+
+
 /*Recieves data which is an array of n points*/
 double **computeSimMat(Point *data, int n){
     double **res = (double **)malloc(sizeof(double *)*n);
@@ -71,7 +197,6 @@ double **computeNormSimMat(double **A,double **D, int n){
 
     C = mulMat(normD,A, n,n,n);
     res = mulMat(C,normD, n,n,n);
-
     /*Free auxiliary allocated memory*/
     for(i=0; i<n; ++i){
         free(normD[i]);
