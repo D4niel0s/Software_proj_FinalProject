@@ -28,5 +28,8 @@ double **transpose(double**,int,int);
 double **matDiff(double**,double**,int,int);
 double eucDist(Point,Point);
 
+int main(int, char **);
+int countCommas(char *);
+char *skipUntilComma(char []);
 
 #endif /*SYMNMF_H*/
