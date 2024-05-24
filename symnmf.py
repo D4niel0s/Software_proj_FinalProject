@@ -1,4 +1,4 @@
-import math, sys, numpy as np, pandas as pd,time
+import math, sys, numpy as np, pandas as pd
 import symnmfmodule as sm
 
 np.random.seed(0)
