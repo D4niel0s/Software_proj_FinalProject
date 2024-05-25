@@ -100,11 +100,10 @@ static PyObject *compNormMat(PyObject *self, PyObject *args){
 }
 
 static PyObject *OptimizeH(PyObject *self, PyObject *args){
-    PyObject *GivenH, *GivenW, *tmp;
-
+    PyObject *GivenH, *GivenW;
     int i,n,k, DEF_MAX_ITER;
     double **H, **W,**OPT, EPS;
-    int j;
+
     /*Output*/
     PyObject *OUT;
 
