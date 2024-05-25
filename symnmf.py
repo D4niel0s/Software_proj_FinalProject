@@ -45,7 +45,7 @@ def main():
 
 
 
-
+# Initialize H randomly as said in the assignment
 def initH(W:list[list[float]], n:int, k:int) -> list[list[float]]:
     avg:float = 0
     for i in range(n):
