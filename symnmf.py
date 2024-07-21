@@ -13,7 +13,7 @@ class Point:
 def main():
     argc = len(sys.argv)
     if(argc != 4):
-        print("ERR")
+        print("An error has ocurred")
         exit(0)
 
     try:
@@ -21,7 +21,7 @@ def main():
         goal = str(sys.argv[2])
         fileName = str(sys.argv[3])
     except:
-        print("ERR")
+        print("An error has ocurred")
         exit(0)
 
     N,d, data = parseFile(fileName)
